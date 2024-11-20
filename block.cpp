@@ -2,7 +2,7 @@
 
 // グローバル変数宣言
 BLOCK g_aBlock[MAX_BLOCK];			// ブロック情報
-SETBLOCK g_aSetBlock;	// セットブロック構造体
+
 //********************************************
 //ブロックの初期化
 //********************************************
@@ -10,11 +10,6 @@ void InitBlock(void)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-
-		g_aSetBlock.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_aSetBlock.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		g_aSetBlock.nType = BLOCKTYPE_MAX;
-		g_aSetBlock.pFilename = NULL;
 
 	for (int nCntBlock = 0; nCntBlock < MAX_BLOCK; nCntBlock++)
 	{
@@ -25,6 +20,7 @@ void InitBlock(void)
 		g_aBlock[nCntBlock].dwNumMatBlock = 0;
 		g_aBlock[nCntBlock].pos = D3DXVECTOR3(0.0f ,0.0f, 0.0f);
 		g_aBlock[nCntBlock].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBlock[nCntBlock].pFilename = NULL;
 		g_aBlock[nCntBlock].nType = BLOCKTYPE_MAX;
 		g_aBlock[nCntBlock].bUse = false;
 	}
@@ -144,10 +140,11 @@ void SetBlock(SETBLOCK setBlock)
 			g_aBlock[nCntBlock].pos = setBlock.pos;
 			g_aBlock[nCntBlock].rot = setBlock.rot;
 			g_aBlock[nCntBlock].nType = setBlock.nType;
+			g_aBlock[nCntBlock].pFilename = &setBlock.astr[0];
 			g_aBlock[nCntBlock].bUse = true;
 
 			// Xファイルの読み込み
-			D3DXLoadMeshFromX(setBlock.pFilename,
+			D3DXLoadMeshFromX(g_aBlock[nCntBlock].pFilename,
 				D3DXMESH_SYSTEMMEM,
 				pDevice,
 				NULL,
@@ -174,9 +171,4 @@ void SetBlock(SETBLOCK setBlock)
 			break;
 		}
 	}
-}
-
-SETBLOCK* GetBlock(void)
-{
-	return &g_aSetBlock;
 }

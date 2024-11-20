@@ -1,1 +1,2 @@
 C:\Users\student\source\repos\SnowBallSviver\Debug\SnowBallSviver.exe
+C:\Users\student\source\repos\SnowBallSviver\SnowBallSviver\Debug\SnowBallSviver.exe

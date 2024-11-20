@@ -25,6 +25,7 @@ typedef struct
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 向き
+	const char* pFilename;	// ファイル名
 	int nType;				// タイプ
 	bool bUse;				// 使っているるかどうか
 }BLOCK;
@@ -45,5 +46,4 @@ void UninitBlock(void);
 void UpdateBlock(void);
 void DrawBlock(void);
 void SetBlock(SETBLOCK setBlock);
-SETBLOCK* GetBlock(void);
 #endif // !_MODEL_H_

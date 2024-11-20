@@ -1,16 +1,24 @@
 STAGESET
 
 SETBLOC
-POS 0.0 0.0 0.0
-ROT 0.0 0.0 0.0
-BLOCKTYPE 0
-BLOCKFILE date//xfile//block//Block_Snow_001.x
+POS = 0.0 20.0 0.0
+ROT = 0.0 0.0 0.0
+BLOCKTYPE = 0
+BLOCKFILE = date\xfile\block\Block_Snow_001.x
 ENDSETBLOCK
 
 SETBLOC
-POS -100.0 0.0 0.0
-ROT 0.0 0.0 0.0
-BLOCKTYPE 1
+POS = -60.0 0.0 0.0
+ROT = 0.0 0.0 0.0
+BLOCKTYPE = 1
+BLOCKFILE = date\xfile\block\Block_Ice_001.x
+ENDSETBLOCK
+
+SETBLOC
+POS = -120.0 0.0 0.0
+ROT = 0.0 0.0 0.0
+BLOCKTYPE = 1
+BLOCKFILE = date\xfile\block\Block_Gravel_001.x
 ENDSETBLOCK
  
 ENDSTAGESET
