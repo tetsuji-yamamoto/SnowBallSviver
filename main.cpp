@@ -313,7 +313,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitParticle();		// パーティクル
 
 	//モードの設定
-	//SetMode(g_mode);
+	SetMode(g_mode);
+
 	//デバッグ用表示フォントの生成
 	D3DXCreateFont(g_pD3DDevice, 18, 0, 0, 0,
 		FALSE, SHIFTJIS_CHARSET,
@@ -448,6 +449,53 @@ void Draw(void)
 
 	//バックバッファとフロントバッファの入れ替え
 	g_pD3DDevice->Present(NULL, NULL, NULL, NULL);
+}
+
+//******************************************
+// モード切替
+//******************************************
+void SetMode(MODE mode)
+{
+	// 今の状態を終了させる
+	switch (g_mode)
+	{
+	case MODE_TITLE:	//タイトル画面
+		break;
+	case MODE_GAME:		//ゲーム画面
+		break;
+	case MODE_RESULT:	//リザルト画面
+		break;
+	case MODE_RANKING:	//ランキング画面
+		break;
+	case MODE_TUTORIAL:	//チュートリアル画面
+		break;
+	}
+
+	// 次のモードに初期化
+	switch (mode)
+	{
+	case MODE_TITLE:	//タイトル画面
+		break;
+	case MODE_GAME:		//ゲーム画面
+		break;
+	case MODE_RESULT:	//リザルト画面
+		break;
+	case MODE_RANKING:	//ランキング画面
+		break;
+	case MODE_TUTORIAL:	//チュートリアル画面
+		break;
+	}
+
+	// 次のモードにする
+	g_mode = mode;
+}
+
+//******************************************
+// モード取得
+//******************************************
+MODE GetMode(void)
+{
+	return g_mode;
 }
 
 //******************************************
