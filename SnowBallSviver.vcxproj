@@ -146,6 +146,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="guide.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="readtext.cpp" />
     <ClCompile Include="effect.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="guide.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="readtext.h" />
     <ClInclude Include="effect.h" />
