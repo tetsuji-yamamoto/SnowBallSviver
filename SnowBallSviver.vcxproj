@@ -141,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="billboard.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -152,18 +151,13 @@
     <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="meshfild.cpp" />
-    <ClCompile Include="model.cpp" />
     <ClCompile Include="mouse.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="polygon.cpp" />
     <ClCompile Include="shadow.cpp" />
-    <ClCompile Include="wall.cpp" />
     <ClCompile Include="writetext.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="billboard.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
@@ -174,14 +168,10 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="meshfield.h" />
-    <ClInclude Include="model.h" />
     <ClInclude Include="mouse.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="polygon.h" />
     <ClInclude Include="shadow.h" />
-    <ClInclude Include="wall.h" />
     <ClInclude Include="writetext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

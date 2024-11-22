@@ -1,22 +1,17 @@
 #include "main.h"
-#include "polygon.h"
 #include "camera.h"
 #include "light.h"
-#include "model.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "joypad.h"
 #include "player.h"
 #include "shadow.h"
-#include "wall.h"
 #include "block.h"
-#include "billboard.h"
 #include "bullet.h"
 #include "explosion.h"
 #include "effect.h"
 #include "particle.h"
 #include "readtext.h"
-#include "meshfield.h"
 #include "writetext.h"
 
 //グローバル変数宣言
@@ -308,15 +303,10 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	}
 
 	InitShadow();	// 影
-	//InitPolygon();	// ポリゴン
-	InitMeshField();// メッシュフィールド
 	InitCamera();	// カメラ
 	InitLight();	// ライト
-	InitModel();	// モデル
 	InitPlayer();	// プレイヤー
-	InitWall();		// 壁
 	InitBlock();	// ブロック
-	InitBillboard();	// ビルボード
 	InitBullet();		// 弾
 	InitExplosion();	// 爆発
 	InitEffect();		// エフェクト
@@ -341,16 +331,11 @@ void Uninit(void)
 	UninitKeyboard();	// キーボードの終了処理
 	UninitMouse();		// マウス
 	UninitJoypad();		// コントローラー
-	//UninitPolygon();	//ポリゴン
-	UninitMeshField();	// メッシュフィールド
 	UninitCamera();		//カメラ
 	UninitLight();		//ライト
-	UninitModel();		// モデル
 	UninitPlayer();		// プレイヤー
 	UninitShadow();		// 影
-	UninitWall();		// 壁
 	UninitBlock();		// ブロック
-	UninitBillboard();	// ビルボード
 	UninitBullet();		// 弾
 	UninitExplosion();	// 爆発
 	UninitEffect();		// エフェクト
@@ -385,15 +370,10 @@ void Updata(void)
 	UpdateMouse();		// コントローラー
 	UpdataJoypad();		// ジョイパッド
 	UpdatePlayer();		// プレイヤー
-	//UpdatePolygon();	//ポリゴン
-	UpdateMeshField();	// メッシュフィールド
 	UpdateCamera();		//カメラ
 	UpdateLight();		//ライト
-	UpdateModel();		// モデル
 	UpdateShadow();		// 影
-	UpdateWall();		// 壁
 	UpdateBlock();		// ブロック
-	UpdateBillboard();	// ビルボード
 	UpdateBullet();		// 弾
 	UpdateExplosion();	// 爆発
 	UpdateEffect();		// エフェクト
@@ -443,15 +423,10 @@ void Draw(void)
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//描画開始が成功した場合
 		SetCamera();		// カメラ
-		//DrawPolygon();		// ポリゴン
-		DrawMeshField();	// メッシュフィールド
-		DrawWall();			// 壁
 		DrawShadow();		// 影
 		DrawEffect();		// エフェクト
-		DrawModel();		// モデル
 		DrawPlayer();		// プレイヤー
 		DrawBlock();		// ブロック
-		DrawBillboard();	// ビルボード
 		DrawBullet();		// 弾
 		DrawExplosion();	// 爆発
 

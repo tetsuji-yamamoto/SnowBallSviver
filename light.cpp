@@ -57,60 +57,60 @@ void UninitLight(void)
 //*****************************************
 void UpdateLight(void)
 {
-	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+	////デバイスの取得
+	//LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
-	//ライトの方向ベクトル
-	D3DXVECTOR3 vecDir[3];
+	////ライトの方向ベクトル
+	//D3DXVECTOR3 vecDir[3];
 
-	vecDir[0] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
-	vecDir[1] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
-	vecDir[2] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
+	//vecDir[0] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
+	//vecDir[1] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
+	//vecDir[2] = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
 
-	////正規化する(大きさ１のベクトルにする)
-	//D3DXVec3Normalize(&vecDir[0], &vecDir[0]);
-	//g_light[0].Direction = vecDir[0];
+	//////正規化する(大きさ１のベクトルにする)
+	////D3DXVec3Normalize(&vecDir[0], &vecDir[0]);
+	////g_light[0].Direction = vecDir[0];
 
-	if (KeyboardRepeat(DIK_R) == true)
-	{
-		g_light[0].Direction.x += 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_F) == true)
-	{
-		g_light[0].Direction.x -= 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_V) == true)
-	{
-		g_light[0].Direction.x = 0.0f;
-	}
+	//if (KeyboardRepeat(DIK_R) == true)
+	//{
+	//	g_light[0].Direction.x += 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_F) == true)
+	//{
+	//	g_light[0].Direction.x -= 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_V) == true)
+	//{
+	//	g_light[0].Direction.x = 0.0f;
+	//}
 
-	if (KeyboardRepeat(DIK_T) == true)
-	{
-		g_light[0].Direction.y += 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_G) == true)
-	{
-		g_light[0].Direction.y -= 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_B) == true)
-	{
-		g_light[0].Direction.y = 0.0f;
-	}
+	//if (KeyboardRepeat(DIK_T) == true)
+	//{
+	//	g_light[0].Direction.y += 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_G) == true)
+	//{
+	//	g_light[0].Direction.y -= 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_B) == true)
+	//{
+	//	g_light[0].Direction.y = 0.0f;
+	//}
 
-	if (KeyboardRepeat(DIK_Y) == true)
-	{
-		g_light[0].Direction.z += 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_H) == true)
-	{
-		g_light[0].Direction.z -= 0.1f;
-	}
-	else if (KeyboardRepeat(DIK_N) == true)
-	{
-		g_light[0].Direction.z = 0.0f;
-	}
-	//ライトを設定する
-	pDevice->SetLight(0, &g_light[0]);
+	//if (KeyboardRepeat(DIK_Y) == true)
+	//{
+	//	g_light[0].Direction.z += 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_H) == true)
+	//{
+	//	g_light[0].Direction.z -= 0.1f;
+	//}
+	//else if (KeyboardRepeat(DIK_N) == true)
+	//{
+	//	g_light[0].Direction.z = 0.0f;
+	//}
+	////ライトを設定する
+	//pDevice->SetLight(0, &g_light[0]);
 }
 
 D3DLIGHT9* GetLight(void)
