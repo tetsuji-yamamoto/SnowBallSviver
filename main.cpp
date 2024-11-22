@@ -13,6 +13,9 @@
 #include "particle.h"
 #include "readtext.h"
 #include "writetext.h"
+#include "title.h"
+#include "game.h"
+#include "result.h"
 
 //グローバル変数宣言
 LPDIRECT3D9 g_pD3D = NULL;						//Direct3Dオブジェクトへのポインタ
@@ -302,15 +305,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	InitShadow();	// 影
-	InitCamera();	// カメラ
-	InitLight();	// ライト
-	InitPlayer();	// プレイヤー
-	InitBlock();	// ブロック
-	InitBullet();		// 弾
-	InitExplosion();	// 爆発
-	InitEffect();		// エフェクト
-	InitParticle();		// パーティクル
+	
 
 	//モードの設定
 	SetMode(g_mode);
@@ -332,17 +327,7 @@ void Uninit(void)
 	UninitKeyboard();	// キーボードの終了処理
 	UninitMouse();		// マウス
 	UninitJoypad();		// コントローラー
-	UninitCamera();		//カメラ
-	UninitLight();		//ライト
-	UninitPlayer();		// プレイヤー
-	UninitShadow();		// 影
-	UninitBlock();		// ブロック
-	UninitBullet();		// 弾
-	UninitExplosion();	// 爆発
-	UninitEffect();		// エフェクト
-
-
-
+	
 	//Direct3Dデバイスの破棄
 	if (g_pD3DDevice != NULL)
 	{
@@ -370,44 +355,55 @@ void Updata(void)
 	UpdataKeyboard();	// キー入力の更新処理
 	UpdateMouse();		// コントローラー
 	UpdataJoypad();		// ジョイパッド
-	UpdatePlayer();		// プレイヤー
-	UpdateCamera();		//カメラ
-	UpdateLight();		//ライト
-	UpdateShadow();		// 影
-	UpdateBlock();		// ブロック
-	UpdateBullet();		// 弾
-	UpdateExplosion();	// 爆発
-	UpdateEffect();		// エフェクト
-	UpdateParticle();	// パーティクル
+
+	// 今の状態の更新処理
+	switch (g_mode)
+	{
+	case MODE_TITLE:	//タイトル画面
+		UpdateTitle();
+		break;
+
+	case MODE_GAME:		//ゲーム画面
+		UpdateGame();
+		break;
+
+	case MODE_RESULT:	//リザルト画面
+		UpdateResult();
+		break;
+	}
 
 #ifdef _DEBUG
 
 	if (KeyboardTrigger(DIK_F2))
-	{
+	{//　オブジェクトのテキストへの読み込み
 		ReadText();
 	}
 	else if (KeyboardTrigger(DIK_F3))
-	{
+	{// オブジェクトのテキストへの書き込み
 		WriteText();
 	}
 
-#endif
-
-	switch (g_mode)
+	// モード切替
+	if (KeyboardTrigger(DIK_F10))
 	{
-	case MODE_TITLE:	//タイトル画面
-		break;
-	case MODE_GAME:		//ゲーム画面
-		break;
-	case MODE_RESULT:	//リザルト画面
-		break;
-	case MODE_RANKING:	//ランキング画面
-		break;
-	case MODE_TUTORIAL:	//チュートリアル画面
-		break;
+		// 次のモードに切り替える
+		switch (g_mode)
+		{
+		case MODE_TITLE:	//タイトル画面
+			SetMode(MODE_GAME);
+			break;
+
+		case MODE_GAME:		//ゲーム画面
+			SetMode(MODE_RESULT);
+			break;
+
+		case MODE_RESULT:	//リザルト画面
+			SetMode(MODE_TITLE);
+			break;
+		}
 	}
-	
-	
+
+#endif
 }
 
 //==========================================
@@ -423,14 +419,22 @@ void Draw(void)
 	//描画開始
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{//描画開始が成功した場合
-		SetCamera();		// カメラ
-		DrawShadow();		// 影
-		DrawEffect();		// エフェクト
-		DrawPlayer();		// プレイヤー
-		DrawBlock();		// ブロック
-		DrawBullet();		// 弾
-		DrawExplosion();	// 爆発
 
+		// 今の状態の描画
+		switch (g_mode)
+		{
+		case MODE_TITLE:	//タイトル画面
+			DrawTitle();
+			break;
+
+		case MODE_GAME:		//ゲーム画面
+			DrawGame();
+			break;
+
+		case MODE_RESULT:	//リザルト画面
+			DrawResult();
+			break;
+		}
 
 #ifdef _DEBUG //デバッグビルド時だけ表示
 
@@ -460,14 +464,15 @@ void SetMode(MODE mode)
 	switch (g_mode)
 	{
 	case MODE_TITLE:	//タイトル画面
+		UninitTitle();
 		break;
+
 	case MODE_GAME:		//ゲーム画面
+		UninitGame();
 		break;
+
 	case MODE_RESULT:	//リザルト画面
-		break;
-	case MODE_RANKING:	//ランキング画面
-		break;
-	case MODE_TUTORIAL:	//チュートリアル画面
+		UninitResult();
 		break;
 	}
 
@@ -475,14 +480,15 @@ void SetMode(MODE mode)
 	switch (mode)
 	{
 	case MODE_TITLE:	//タイトル画面
+		InitGame();
 		break;
+
 	case MODE_GAME:		//ゲーム画面
+		InitGame();
 		break;
+
 	case MODE_RESULT:	//リザルト画面
-		break;
-	case MODE_RANKING:	//ランキング画面
-		break;
-	case MODE_TUTORIAL:	//チュートリアル画面
+		InitResult();
 		break;
 	}
 

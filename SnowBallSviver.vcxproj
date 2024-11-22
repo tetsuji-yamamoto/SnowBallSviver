@@ -145,6 +145,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="fade.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="readtext.cpp" />
     <ClCompile Include="effect.cpp" />
