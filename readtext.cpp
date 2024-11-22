@@ -45,7 +45,7 @@ void SetStage(FILE *pFile)
 		// テキストを読んで結果を代入
 		int result = fscanf(pFile, "%s", &astr[0]);
 
-		if (strcmp(&astr[0], "SETBLOC") == 0)
+		if (strcmp(&astr[0], "SETBLOCK") == 0)
 		{// ブロック情報を読み込む
 			ReadBlockDate(pFile);
 		}
@@ -83,47 +83,10 @@ void ReadBlockDate(FILE* pFile)
 	// テキストを読み込む
 	while (1)
 	{
+		// テキストを読んで結果を代入
+		result = fscanf(pFile, "%s", &astr[0]);
 
-		if (bComent)
-		{// コメントを読んだら
-			for (int nCnt = 0; nCnt < 256; nCnt++)
-			{// 前回読み取ったのを代入
-				astr[nCnt] = astrOld[nCnt];
-
-				if (astrOld[nCnt] == '\0')
-				{// ヌル文字なら終わる
-					break;
-				}
-			}
-
-			bComent = false;	// コメント読んでない状態
-		}
-		else
-		{
-			for (int nCnt = 0; nCnt < 256; nCnt++)
-			{// 古い文字列を更新
-				astrOld[nCnt] = astr[nCnt];
-
-				if (astr[nCnt] == '\0')
-				{// ヌル文字なら終わる
-					break;
-				}
-			}
-
-			// テキストを読んで結果を代入
-			result = fscanf(pFile, "%s", &astr[0]);
-		}
-
-		if (strcmp(&astr[0], "=") == 0)
-		{// タイプを設定する
-			bComent = true;	// コメント読んだよ
-		}
-		else if (strcmp(&astr[0], "#") == 0)
-		{// 位置を設定する
-			bComent = true;	// コメント読んだよ
-			result = fscanf(pFile, "%s", &astr[0]);
-		}
-		else if (strcmp(&astr[0], "POS") == 0)
+		if (strcmp(&astr[0], "POS") == 0)
 		{// 位置を設定する
 			//数値を読むこむ
 			result = fscanf(pFile, "%f", &seBlock.pos.x);
@@ -149,7 +112,6 @@ void ReadBlockDate(FILE* pFile)
 			SetBlock(seBlock);
 			break;
 		}
-
 
 		// 読み切ったら終了
 		if (result == EOF)

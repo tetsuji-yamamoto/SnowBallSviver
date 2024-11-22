@@ -160,6 +160,7 @@
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="wall.cpp" />
+    <ClCompile Include="writetext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="billboard.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="shadow.h" />
     <ClInclude Include="wall.h" />
+    <ClInclude Include="writetext.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -26,6 +26,7 @@ typedef struct
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 向き
 	const char* pFilename;	// ファイル名
+	char astr[256];			// 文字格納
 	int nType;				// タイプ
 	bool bUse;				// 使っているるかどうか
 }BLOCK;
@@ -40,10 +41,18 @@ typedef struct
 	int nType;				// タイプ
 }SETBLOCK;
 
+// ブロックの管理
+typedef struct
+{
+	int nBlockNum;
+}BLOCKMANAGER;
+
 // プロトタイプ宣言
 void InitBlock(void);
 void UninitBlock(void);
 void UpdateBlock(void);
 void DrawBlock(void);
 void SetBlock(SETBLOCK setBlock);
+BLOCK* GetBlock(void);
+BLOCKMANAGER* GetBlockManager(void);
 #endif // !_MODEL_H_

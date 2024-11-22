@@ -17,6 +17,7 @@
 #include "particle.h"
 #include "readtext.h"
 #include "meshfield.h"
+#include "writetext.h"
 
 //グローバル変数宣言
 LPDIRECT3D9 g_pD3D = NULL;						//Direct3Dオブジェクトへのポインタ
@@ -403,6 +404,10 @@ void Updata(void)
 	if (KeyboardTrigger(DIK_F2))
 	{
 		ReadText();
+	}
+	else if (KeyboardTrigger(DIK_F3))
+	{
+		WriteText();
 	}
 
 #endif

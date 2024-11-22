@@ -2,7 +2,7 @@
 
 // グローバル変数宣言
 BLOCK g_aBlock[MAX_BLOCK];			// ブロック情報
-
+BLOCKMANAGER g_blockManager;			// ブロック管理
 //********************************************
 //ブロックの初期化
 //********************************************
@@ -10,6 +10,8 @@ void InitBlock(void)
 {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+
+	g_blockManager.nBlockNum = 0;
 
 	for (int nCntBlock = 0; nCntBlock < MAX_BLOCK; nCntBlock++)
 	{
@@ -143,6 +145,16 @@ void SetBlock(SETBLOCK setBlock)
 			g_aBlock[nCntBlock].pFilename = &setBlock.astr[0];
 			g_aBlock[nCntBlock].bUse = true;
 
+			for (int nCnt = 0; nCnt < 256; nCnt++)
+			{
+				g_aBlock[nCntBlock].astr[nCnt] = setBlock.astr[nCnt];
+				if (setBlock.astr[nCnt] == '\n')
+				{
+					break;
+				}
+			}
+			g_blockManager.nBlockNum++;	// ブロックカウント
+
 			// Xファイルの読み込み
 			D3DXLoadMeshFromX(g_aBlock[nCntBlock].pFilename,
 				D3DXMESH_SYSTEMMEM,
@@ -171,4 +183,20 @@ void SetBlock(SETBLOCK setBlock)
 			break;
 		}
 	}
+}
+
+//********************************************
+// ブロックの取得
+//********************************************
+BLOCK* GetBlock(void)
+{
+	return &g_aBlock[0];
+}
+
+//********************************************
+// ブロック管理の取得
+//********************************************
+BLOCKMANAGER* GetBlockManager(void)
+{
+	return &g_blockManager;
 }
