@@ -423,6 +423,7 @@ void Draw(void)
 	if (SUCCEEDED(g_pD3DDevice->BeginScene()))
 	{// 描画開始が成功した場合
 
+
 		// 今の状態の描画
 		switch (g_mode)
 		{
@@ -438,6 +439,7 @@ void Draw(void)
 			DrawResult();
 			break;
 		}
+	
 
 #ifdef _DEBUG // デバッグビルド時だけ表示
 
@@ -483,7 +485,7 @@ void SetMode(MODE mode)
 	switch (mode)
 	{
 	case MODE_TITLE:	// タイトル画面
-		InitGame();		   
+		InitTitle();		   
 		break;			   
 						   
 	case MODE_GAME:		// ゲーム画面

@@ -146,7 +146,7 @@ void UpdatePause(void)
 	int nCntPause;
 
 	VERTEX_2D* pVtx;
-	XINPUT_STATE* pStick = GetJoySticAngle();	//スティック取得
+	XINPUT_STATE* pStick = GetJoypadState();	//スティック取得
 
 	//頂点バッファをロックし、ちょうてん情報へのポインタを取得
 	g_pVtxBuffPause->Lock(0, 0, (void**)&pVtx, 0);

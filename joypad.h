@@ -37,14 +37,18 @@ bool GetJoypadTrigger(JOYKEY key);	//押した瞬間
 bool GetJoypadRelease(JOYKEY key);	//離したとき
 bool GetJoypadRepeat(JOYKEY key);	//押している間
 
-//トリガー
-bool GetJoyTrigger(JOYKEY key);			//押しているとき
-bool GetJoyTriggerTrigger(JOYKEY key);	//押したとき
-bool GetJoyTriggerRelease(JOYKEY key);	//離したとき
-bool GetJoyTriggerRepeat(JOYKEY key);	//押している間
+//LTRT
+bool GetLTTrigger(void);	//押したとき
+bool GetLTRelease(void);	//離したとき
+bool GetLTRepeat(void);		//押している間
+bool GetRTTrigger(void);	//押したとき
+bool GetRTRelease(void);	//離したとき
+bool GetRTRepeat(void);		//押している間
+
 
 //スティック
 bool GetJoyStickL(void);
-XINPUT_STATE* GetJoySticAngle(void);
+bool GetJoyStickR(void);
+XINPUT_STATE* GetJoypadState(void);
 
 #endif // !_JOYPAD_H_

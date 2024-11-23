@@ -4,6 +4,7 @@
 #include "shadow.h"
 #include "bullet.h"
 #include "particle.h"
+#include "joypad.h"
 
 // グローバル変数宣言
 LPDIRECT3DTEXTURE9 g_apTexturePlayer[6] = {};		// テクスチャへのポンタ
@@ -92,35 +93,64 @@ void UninitPlayer(void)
 //************************************************
 void UpdatePlayer(void)
 {
-	Camera* pCamera = GetCamera();	// カメラの取得
-
+	Camera* pCamera = GetCamera();				// カメラの取得
+	XINPUT_STATE* pJoypad = GetJoypadState();	// コントローラー情報取得
 	g_player.bMove = false;	// 動かないよ	
 
-	if (KeyboardRepeat(DIK_I))
+	// キー操作
+	if (KeyboardRepeat(DIK_W))
 	{// 前移動
 		g_player.bMove = true;	// 動くよ
 
-		g_player.rotDest.y = pCamera->rot.y;	// 目的の角度を設定
+		if (KeyboardRepeat(DIK_A))
+		{// 左移動
+			g_player.rotDest.y = pCamera->rot.y - D3DX_PI * 0.25f;	// 目的の角度を設定
+		}
+		else if (KeyboardRepeat(DIK_D))
+		{// 右移動		
+			g_player.rotDest.y = pCamera->rot.y + D3DX_PI * 0.25f;	// 目的の角度を設定
+		}
+		else
+		{
+			g_player.rotDest.y = pCamera->rot.y;	// 目的の角度を設定
+		}
 	}
-	else if (KeyboardRepeat(DIK_K))
+	else if (KeyboardRepeat(DIK_S))
 	{// 後ろ移動
 		g_player.bMove = true;	// 動くよ
-
-		g_player.rotDest.y = pCamera->rot.y + D3DX_PI;	// 目的の角度を設定
+		if (KeyboardRepeat(DIK_A))
+		{// 左移動
+			g_player.rotDest.y = pCamera->rot.y - D3DX_PI * 0.75f;	// 目的の角度を設定
+		}
+		else if (KeyboardRepeat(DIK_D))
+		{// 右移動		
+			g_player.rotDest.y = pCamera->rot.y + D3DX_PI * 0.75f;	// 目的の角度を設定
+		}
+		else
+		{
+			g_player.rotDest.y = pCamera->rot.y + D3DX_PI;	// 目的の角度を設定
+		}
 	}
-
-	if (KeyboardRepeat(DIK_J))
+	else if (KeyboardRepeat(DIK_A))
 	{// 左移動
 		g_player.bMove = true;	// 動くよ
 
 		g_player.rotDest.y = pCamera->rot.y - D3DX_PI * 0.5f;	// 目的の角度を設定
 
 	}
-	else if (KeyboardRepeat(DIK_L))
+	else if (KeyboardRepeat(DIK_D))
 	{// 右移動		
 		g_player.bMove = true;	// 動くよ
 
 		g_player.rotDest.y = pCamera->rot.y + D3DX_PI * 0.5f;	// 目的の角度を設定
+	}
+
+	// コントローラー操作
+	if (GetJoyStickL())
+	{// 左スティック
+		g_player.bMove = true;	// 動くよ
+		// 目的の角度を算出
+		g_player.rotDest.y = pCamera->rot.y + atan2f(pJoypad->Gamepad.sThumbLX, pJoypad->Gamepad.sThumbLY);
 	}
 
 	if (g_player.rotDest.y > D3DX_PI)
@@ -171,7 +201,7 @@ void UpdatePlayer(void)
 	g_player.pos.y += g_player.move.y;
 	g_player.pos.z += g_player.move.z;
 
-	if (KeyboardTrigger(DIK_RSHIFT))
+	if (KeyboardTrigger(DIK_V) || GetRTTrigger())
 	{// 右移動		
 
 		// 弾設定
@@ -257,6 +287,8 @@ void DrawPlayer(void)
 
 	// 保存していたマテリアルを戻す
 	pDevice->SetMaterial(&matDef);
+
+
 }
 
 //************************************************
