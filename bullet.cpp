@@ -5,7 +5,7 @@
 
 // グローバル変数宣言
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffBullet = NULL;	// 頂点バッファへのポインタ
-LPDIRECT3DTEXTURE9 g_pVtxTexturBullet = NULL;		// テクスチャのポインタ
+LPDIRECT3DTEXTURE9 g_pVtxTexturBullet[BULLETTYPE_MAX] = {};		// テクスチャのポインタ
 BULLET g_aBullet[MAX_BULLET];						// 弾
 
 //**************************************
@@ -26,8 +26,23 @@ void InitBullet(void)
 
 	// テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"date\\texture\\billboard\\bullet000.png",
-		&g_pVtxTexturBullet);
+		FILE_TEX_BULLET_SNOW,
+		&g_pVtxTexturBullet[BULLETTYPE_SNOW]);
+
+	// テクスチャの読み込み
+	D3DXCreateTextureFromFile(pDevice,
+		FILE_TEX_BULLET_ICE,
+		&g_pVtxTexturBullet[BULLETTYPE_ICE]);
+
+	// テクスチャの読み込み
+	D3DXCreateTextureFromFile(pDevice,
+		FILE_TEX_BULLET_GRAVEL,
+		&g_pVtxTexturBullet[BULLETTYPE_GRAVEL]);
+
+	// テクスチャの読み込み
+	D3DXCreateTextureFromFile(pDevice,
+		FILE_TEX_BULLET_GRAVEL,
+		&g_pVtxTexturBullet[BULLETTYPE_GRAVEL_DIFFUSION]);
 
 	// 頂点バッファをロック
 	g_pVtxBuffBullet->Lock(0, 0, (void**)&pVtx, 0);
@@ -37,23 +52,26 @@ void InitBullet(void)
 		g_aBullet[nCntBl].pos = D3DXVECTOR3(0.0f, 50.0f, 0.0f);
 		g_aBullet[nCntBl].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aBullet[nCntBl].dir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBullet[nCntBl].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aBullet[nCntBl].type = BULLETTYPE_MAX;
+		g_aBullet[nCntBl].fLife = 0.0f;
 		g_aBullet[nCntBl].bUse = false;
 
 		// 頂点座標の設定
-		pVtx[0].pos.x = -20.0f;
-		pVtx[0].pos.y = 20.0f;
+		pVtx[0].pos.x = 0.0f;
+		pVtx[0].pos.y = 0.0f;
 		pVtx[0].pos.z = 0.0f;
 
-		pVtx[1].pos.x = 20.0f;
-		pVtx[1].pos.y = 20.0f;
+		pVtx[1].pos.x = 0.0f;
+		pVtx[1].pos.y = 0.0f;
 		pVtx[1].pos.z = 0.0f;
 
-		pVtx[2].pos.x = -20.0f;
-		pVtx[2].pos.y = -20.0f;
+		pVtx[2].pos.x = 0.0f;
+		pVtx[2].pos.y = 0.0f;
 		pVtx[2].pos.z = 0.0f;
 
-		pVtx[3].pos.x = 20.0f;
-		pVtx[3].pos.y = -20.0f;
+		pVtx[3].pos.x = 0.0f;
+		pVtx[3].pos.y = 0.0f;
 		pVtx[3].pos.z = 0.0f;
 
 		// 各頂点の法線の設定(＊ベクトルの大きさは1にする必要がある)
@@ -92,11 +110,14 @@ void UninitBullet(void)
 		g_pVtxBuffBullet = NULL;
 	}
 
-	// テクスチャの破棄
-	if (g_pVtxTexturBullet != NULL)
+	for (int nCnt = 0; nCnt < BULLETTYPE_MAX; nCnt)
 	{
-		g_pVtxTexturBullet->Release();
-		g_pVtxTexturBullet = NULL;
+		// テクスチャの破棄
+		if (g_pVtxTexturBullet[nCnt] != NULL)
+		{
+			g_pVtxTexturBullet[nCnt]->Release();
+			g_pVtxTexturBullet[nCnt] = NULL;
+		}
 	}
 }
 
@@ -110,20 +131,25 @@ void UpdateBullet(void)
 		if (g_aBullet[nCntBl].bUse == true)
 		{
 
-			g_aBullet[nCntBl].pos.x += sinf(g_aBullet[nCntBl].dir.y) * 1.0f;
-			g_aBullet[nCntBl].pos.z += cosf(g_aBullet[nCntBl].dir.y) * 1.0f;
-			g_aBullet[nCntBl].fLife -= 1.0f;
-
-			if (g_aBullet[nCntBl].fLife <= 0.0f)
+			switch (g_aBullet[nCntBl].type)
 			{
-				g_aBullet[nCntBl].bUse = false;
-				// 爆発設定
-				SETEXPLO setExplo;
-				setExplo.pos = g_aBullet[nCntBl].pos;
-				setExplo.size = D3DXVECTOR3(20.0f,20.0f,0.0f);
+			case BULLETTYPE_SNOW:	// 雪玉処理
+				SnowBall(nCntBl);
+				break;
 
-				SetExplosion(setExplo);
+			case BULLETTYPE_ICE:	// 氷玉処理
+				IceBall(nCntBl);
+				break;
+
+			case BULLETTYPE_GRAVEL:	// 砂利玉処理
+				GravelBall(nCntBl);
+				break;
+
+			case BULLETTYPE_GRAVEL_DIFFUSION:	// 拡散砂利玉処理
+				GravelBallDiffusion(nCntBl);
+				break;
 			}
+			
 
 			// エフェクト出現
 			EFFECT setEffect;
@@ -136,7 +162,7 @@ void UpdateBullet(void)
 			setEffect.fLife = 120.0f;
 			setEffect.fsizeDiff = 0.01f;
 
-			SetEffect(setEffect);
+			//SetEffect(setEffect);
 		}
 	}
 }
@@ -193,7 +219,7 @@ void DrawBullet(void)
 			pDevice->SetStreamSource(0, g_pVtxBuffBullet, 0, sizeof(VERTEX_3D));
 
 			// テクスチャの設定
-			pDevice->SetTexture(0, g_pVtxTexturBullet);
+			pDevice->SetTexture(0, g_pVtxTexturBullet[g_aBullet[nCntBl].type]);
 
 			// 頂点フォーマットの設定
 			pDevice->SetFVF(FVF_VERTEX_3D);
@@ -206,7 +232,7 @@ void DrawBullet(void)
 	// アルファテストを無効に戻す
 	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE,FALSE);
 
-	// ライトを無効にする
+	// ライトを有効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 
 }
@@ -228,7 +254,11 @@ void SetBullet(SETBULLET setBlt)
 		if (g_aBullet[nCntBl].bUse == false)
 		{
 			g_aBullet[nCntBl].pos = setBlt.pos;
+			g_aBullet[nCntBl].move.x = sinf(setBlt.dir.y) * (float)BULLET_SPEED;
+			g_aBullet[nCntBl].move.y = 0.0f;
+			g_aBullet[nCntBl].move.z = cosf(setBlt.dir.y) * (float)BULLET_SPEED;
 			g_aBullet[nCntBl].dir = setBlt.dir;
+			g_aBullet[nCntBl].type = setBlt.type;
 			g_aBullet[nCntBl].fLife = setBlt.fLife;
 			g_aBullet[nCntBl].bUse = true;
 
@@ -267,4 +297,126 @@ void SetBullet(SETBULLET setBlt)
 	}
 	// 頂点バッファをアンロック
 	g_pVtxBuffBullet->Unlock();
+}
+
+//*****************************
+// 雪玉処理の設定
+//*****************************
+void SnowBall(int nCntBl)
+{
+	g_aBullet[nCntBl].move.y -= (float)BULLET_GRAVITY;
+
+	g_aBullet[nCntBl].pos.x += g_aBullet[nCntBl].move.x;
+	g_aBullet[nCntBl].pos.y += g_aBullet[nCntBl].move.y;
+	g_aBullet[nCntBl].pos.z += g_aBullet[nCntBl].move.z;
+
+	g_aBullet[nCntBl].fLife -= 1.0f;
+
+	if (g_aBullet[nCntBl].fLife <= 0.0f)
+	{
+		g_aBullet[nCntBl].bUse = false;
+
+		// 爆発設定
+		SETEXPLO setExplo;
+		setExplo.pos = g_aBullet[nCntBl].pos;
+		setExplo.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+
+		SetExplosion(setExplo);
+	}
+}
+
+//*****************************
+// 氷玉処理の設定
+//*****************************
+void IceBall(int nCntBl)
+{
+	g_aBullet[nCntBl].move.y -= (float)BULLET_GRAVITY;
+
+	g_aBullet[nCntBl].pos.x += g_aBullet[nCntBl].move.x;
+	g_aBullet[nCntBl].pos.y += g_aBullet[nCntBl].move.y;
+	g_aBullet[nCntBl].pos.z += g_aBullet[nCntBl].move.z;
+
+	g_aBullet[nCntBl].fLife -= 1.0f;
+
+	if (g_aBullet[nCntBl].fLife <= 0.0f)
+	{
+		g_aBullet[nCntBl].bUse = false;
+
+		// 爆発設定
+		SETEXPLO setExplo;
+		setExplo.pos = g_aBullet[nCntBl].pos;
+		setExplo.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+
+		SetExplosion(setExplo);
+	}
+}
+
+//*****************************
+// 砂利玉処理の設定
+//*****************************
+void GravelBall(int nCntBl)
+{
+	g_aBullet[nCntBl].move.y -= (float)BULLET_GRAVITY;
+
+	g_aBullet[nCntBl].pos.x += g_aBullet[nCntBl].move.x;
+	g_aBullet[nCntBl].pos.y += g_aBullet[nCntBl].move.y;
+	g_aBullet[nCntBl].pos.z += g_aBullet[nCntBl].move.z;
+
+	g_aBullet[nCntBl].fLife -= 1.0f;
+
+	if (g_aBullet[nCntBl].fLife <= 0.0f)
+	{
+		// 弾設定
+		SETBULLET setBlt;
+
+		// 情報代入
+		setBlt.pos = g_aBullet[nCntBl].pos;
+		setBlt.size = D3DXVECTOR3(5.0f, 5.0f, 0.0f);
+		setBlt.type = BULLETTYPE_GRAVEL_DIFFUSION;
+		setBlt.fLife = 30.0f;
+
+			setBlt.dir.z = g_aBullet[nCntBl].dir.z;
+		for (int nCnt = 0; nCnt < 20; nCnt++)
+		{
+			setBlt.dir.x = g_aBullet[nCntBl].dir.x + (float)((rand() % 40 - 20) * 0.01f);
+			setBlt.dir.y = g_aBullet[nCntBl].dir.y + (float)((rand() % 40 - 20) * 0.01f);
+			// 引数にぶち込んでセットする
+			SetBullet(setBlt);
+		}
+
+		g_aBullet[nCntBl].bUse = false;
+
+		// 爆発設定
+		SETEXPLO setExplo;
+		setExplo.pos = g_aBullet[nCntBl].pos;
+		setExplo.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+
+		SetExplosion(setExplo);
+	}
+}
+
+//*****************************
+// 砂利玉処理の設定
+//*****************************
+void GravelBallDiffusion(int nCntBl)
+{
+	g_aBullet[nCntBl].move.y -= (float)BULLET_GRAVITY;
+
+	g_aBullet[nCntBl].pos.x += g_aBullet[nCntBl].move.x;
+	g_aBullet[nCntBl].pos.y += g_aBullet[nCntBl].move.y;
+	g_aBullet[nCntBl].pos.z += g_aBullet[nCntBl].move.z;
+
+	g_aBullet[nCntBl].fLife -= 1.0f;
+
+	if (g_aBullet[nCntBl].fLife <= 0.0f)
+	{
+		g_aBullet[nCntBl].bUse = false;
+
+		// 爆発設定
+		SETEXPLO setExplo;
+		setExplo.pos = g_aBullet[nCntBl].pos;
+		setExplo.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+
+		SetExplosion(setExplo);
+	}
 }

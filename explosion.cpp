@@ -152,6 +152,11 @@ void DrawExplosion(void)
 	// ライトを無効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
+	// アルファテストを有効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE,TRUE);
+	pDevice->SetRenderState(D3DRS_ALPHAREF,0);
+	pDevice->SetRenderState(D3DRS_ALPHAFUNC,D3DCMP_GREATER);
+
 	for (int nCntEX = 0; nCntEX < MAX_EXPOLOSION; nCntEX++)
 	{
 		if (g_aExplosion[nCntEX].bUse == true)
@@ -194,6 +199,9 @@ void DrawExplosion(void)
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 4 * nCntEX, 2);
 		}
 	}
+
+	// アルファテストを無効
+	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
 	// ライトを無効にする
 	pDevice->SetRenderState(D3DRS_LIGHTING, TRUE);

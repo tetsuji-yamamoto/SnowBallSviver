@@ -201,34 +201,67 @@ void UpdatePlayer(void)
 	g_player.pos.y += g_player.move.y;
 	g_player.pos.z += g_player.move.z;
 
-	if (KeyboardTrigger(DIK_V) || GetRTTrigger())
-	{// 右移動		
+	if (KeyboardTrigger(DIK_V) || GetJoypadTrigger(JOYKEY_X))
+	{// 弾発射
 
 		// 弾設定
 		SETBULLET setBlt;
 
 		// 情報代入
-		setBlt.pos = g_player.pos;
-		setBlt.dir = g_player.rot;
-		setBlt.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
+		setBlt.dir = g_player.rotDest;
+		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
+		setBlt.type = BULLETTYPE_SNOW;
 		setBlt.fLife = 120.0f;
 
 		// 引数にぶち込んでセットする
 		SetBullet(setBlt);
 
-		// パーティクル設定
-		PARTICLE particle;
+		//// パーティクル設定
+		//PARTICLE particle;
 
-		// 情報入力
-		particle.effect.pos = g_player.pos;
-		particle.effect.col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
-		particle.effect.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
-		particle.effect.dir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		particle.effect.col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-		particle.effect.fDffAlph = 0.01f;
-		particle.effect.fLife = 120.0f;
-		particle.effect.fsizeDiff = 0.01f;
-		SetParticle(particle);
+		//// 情報入力
+		//particle.effect.pos = g_player.pos;
+		//particle.effect.col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
+		//particle.effect.size = D3DXVECTOR3(20.0f, 20.0f, 0.0f);
+		//particle.effect.dir = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		//particle.effect.col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		//particle.effect.fDffAlph = 0.01f;
+		//particle.effect.fLife = 120.0f;
+		//particle.effect.fsizeDiff = 0.01f;
+		//SetParticle(particle);
+	}
+	else if (KeyboardTrigger(DIK_B) || GetJoypadTrigger(JOYKEY_Y))
+	{// 氷玉発射
+		// 弾設定
+		SETBULLET setBlt;
+
+		// 情報代入
+		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
+		setBlt.dir = g_player.rotDest;
+		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
+		setBlt.type = BULLETTYPE_ICE;
+		setBlt.fLife = 60.0f;
+
+		// 引数にぶち込んでセットする
+		SetBullet(setBlt);
+
+	}
+	else if (KeyboardTrigger(DIK_N) || GetJoypadTrigger(JOYKEY_B))
+	{// 砂利玉発射
+		// 弾設定
+		SETBULLET setBlt;
+
+		// 情報代入
+		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
+		setBlt.dir = g_player.rotDest;
+		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
+		setBlt.type = BULLETTYPE_GRAVEL;
+		setBlt.fLife = 30.0f;
+
+		// 引数にぶち込んでセットする
+		SetBullet(setBlt);
+
 	}
 
 	// 影の更新

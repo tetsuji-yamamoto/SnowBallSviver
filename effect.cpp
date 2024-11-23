@@ -175,11 +175,6 @@ void DrawEffect(void)
 	pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
-	// アルファテストを有効
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-	pDevice->SetRenderState(D3DRS_ALPHAREF, 0);
-	pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-
 	// Zの比較方法
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
@@ -229,13 +224,10 @@ void DrawEffect(void)
 		}
 	}
 
-	// アルファテストを無効に戻す
-	pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-
 	// Zの比較方法
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-	// Zバッファに書き込まない
+	// Zバッファに書き込む
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
 	//αブレンディングを元に戻す

@@ -120,13 +120,13 @@ void UpdateGame(void)
 void DrawGame(void)
 {
 	SetCamera();		// カメラ
+	DrawGuide();		// ガイド
 	DrawShadow();		// 影
 	DrawEffect();		// エフェクト
 	DrawPlayer();		// プレイヤー
 	DrawBlock();		// ブロック
 	DrawBullet();		// 弾
 	DrawExplosion();	// 爆発
-	DrawGuide();		// ガイド
 
 
 	//ポーズ中
