@@ -3,11 +3,12 @@
 
 #include "main.h"
 
-#define FILE_TEX_RESULT_GAMEOVER "data\\RESULT\\GameOver_001.png"
-#define FILE_TEX_RESULT_GAMECREAR "data\\RESULT\\GameCrear_001.png"
-#define FILE_TEX_RESULT_TIMEOVER "data\\RESULT\\TimeOver_001.png"
+#define FILE_TEX_RESULT_GAMEOVER "date\\texture\\result\\SBS_RESULT_GAMEOVER_001.png"
+#define FILE_TEX_RESULT_GAMECREAR "date\\texture\\result\\SBS_RESULT_GAMECREAR_001.png"
+#define FILE_TEX_RESULT_TIMEOVER "date\\texture\\result\\SBS_RESULT_GAMECREAR_001.png"
+#define FILE_TEX_RESULT_DEFAULT "date\\texture\\billboard\\wood.png"
 
-//リザルト列挙
+// リザルト列挙
 typedef enum
 {
 	RESULTTYPE_GAMEOVER = 0,
@@ -16,12 +17,13 @@ typedef enum
 	RESULTTYPE_MAX
 }RESULTTYPE;
 
-//リザルト情報
+// リザルト情報
 typedef struct
 {
-	const char* pFileTex;	//テクスチャパス
-	RECT rect;				//四頂点
-	RESULTTYPE resultType;	//リザルトタイプ
+	D3DXVECTOR3 pos;		// 位置
+	const char* pFileTex;	// テクスチャパス
+	RECT rect;				// 四頂点
+	RESULTTYPE resultType;	// リザルトタイプ
 }RESULT;
 
 //プロトタイプ宣言

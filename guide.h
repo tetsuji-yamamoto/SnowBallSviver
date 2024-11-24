@@ -32,6 +32,12 @@ typedef struct
 	bool bUse;
 }GUIDE;
 
+// ガイド管理構造体
+typedef struct
+{
+	bool bDisplay;
+}GUDEMANAGER;
+
 //プロトタイプ宣言
 void InitGuide(void);
 void UninitGuide(void);

@@ -110,7 +110,7 @@ void UninitBullet(void)
 		g_pVtxBuffBullet = NULL;
 	}
 
-	for (int nCnt = 0; nCnt < BULLETTYPE_MAX; nCnt)
+	for (int nCnt = 0; nCnt < BULLETTYPE_MAX; nCnt++)
 	{
 		// テクスチャの破棄
 		if (g_pVtxTexturBullet[nCnt] != NULL)
@@ -255,7 +255,7 @@ void SetBullet(SETBULLET setBlt)
 		{
 			g_aBullet[nCntBl].pos = setBlt.pos;
 			g_aBullet[nCntBl].move.x = sinf(setBlt.dir.y) * (float)BULLET_SPEED;
-			g_aBullet[nCntBl].move.y = 0.0f;
+			g_aBullet[nCntBl].move.y = sinf(setBlt.dir.x) * (float)BULLET_SPEED;
 			g_aBullet[nCntBl].move.z = cosf(setBlt.dir.y) * (float)BULLET_SPEED;
 			g_aBullet[nCntBl].dir = setBlt.dir;
 			g_aBullet[nCntBl].type = setBlt.type;

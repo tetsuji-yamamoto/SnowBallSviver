@@ -1,10 +1,12 @@
 #include "guide.h"
 #include "camera.h"
+#include "keyboard.h"
 
 // グローバル変数宣言
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGuide = NULL;	// 頂点バッファへのポインタ
 D3DXMATRIX g_mtxWorldGuide;						// ワールドマトリックス
 GUIDE g_aGude[OLL_VERTEX];					// ガイド線情報
+GUDEMANAGER g_GuideMane;					// ガイド管理
 
 //**************************************
 // ガイドの初期化
@@ -24,6 +26,8 @@ void InitGuide(void)
 
 	// 頂点バッファをロック
 	g_pVtxBuffGuide->Lock(0, 0, (void**)&pVtx, 0);
+
+	g_GuideMane.bDisplay = true;
 
 	// 頂点座標の設定
 	for (int nCnt = 0; nCnt < OLL_VERTEX; nCnt++)
@@ -98,7 +102,10 @@ void UninitGuide(void)
 //*********************************************
 void UpdateGuide(void)
 {
-
+	if (KeyboardTrigger(DIK_F9))
+	{
+		g_GuideMane.bDisplay = !g_GuideMane.bDisplay;
+	}
 }
 
 //*********************************************
@@ -106,44 +113,47 @@ void UpdateGuide(void)
 //*********************************************
 void DrawGuide(void)
 {
-	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = GetDevice();
-
-	// 計算用マトリックス
-	D3DXMATRIX mtxRot, mtxTrans;
-
-	for (int nCnt = 0; nCnt < OLL_VERTEX; nCnt++)
+	if (g_GuideMane.bDisplay)
 	{
-		if (g_aGude[nCnt].bUse == true)
-		{// 使ってタラ
-			for (int nCntB = 0; nCntB < 2; nCntB++, nCnt++)
-			{
-				// ワールドマトリックスの初期化
-				D3DXMatrixIdentity(&g_mtxWorldGuide);
+		// デバイスの取得
+		LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
-				// 向きを反映
-				D3DXMatrixRotationYawPitchRoll(&mtxRot, g_aGude[nCnt].rotguide.y, g_aGude[nCnt].rotguide.x, g_aGude[nCnt].rotguide.z);
-				D3DXMatrixMultiply(&g_mtxWorldGuide, &g_mtxWorldGuide, &mtxRot);
+		// 計算用マトリックス
+		D3DXMATRIX mtxRot, mtxTrans;
 
-				// 位置を反映
-				D3DXMatrixTranslation(&mtxTrans, g_aGude[nCnt].posguide.x, g_aGude[nCnt].posguide.y, g_aGude[nCnt].posguide.z);
-				D3DXMatrixMultiply(&g_mtxWorldGuide, &g_mtxWorldGuide, &mtxTrans);
+		for (int nCnt = 0; nCnt < OLL_VERTEX; nCnt++)
+		{
+			if (g_aGude[nCnt].bUse == true)
+			{// 使ってタラ
+				for (int nCntB = 0; nCntB < 2; nCntB++, nCnt++)
+				{
+					// ワールドマトリックスの初期化
+					D3DXMatrixIdentity(&g_mtxWorldGuide);
 
-				// ワールドマトリックスの設定
-				pDevice->SetTransform(D3DTS_WORLD, &g_mtxWorldGuide);
+					// 向きを反映
+					D3DXMatrixRotationYawPitchRoll(&mtxRot, g_aGude[nCnt].rotguide.y, g_aGude[nCnt].rotguide.x, g_aGude[nCnt].rotguide.z);
+					D3DXMatrixMultiply(&g_mtxWorldGuide, &g_mtxWorldGuide, &mtxRot);
 
-				// 頂点バッファをデバイスのデータストリームに設定
-				pDevice->SetStreamSource(0, g_pVtxBuffGuide, 0, sizeof(VERTEX_3D));
+					// 位置を反映
+					D3DXMatrixTranslation(&mtxTrans, g_aGude[nCnt].posguide.x, g_aGude[nCnt].posguide.y, g_aGude[nCnt].posguide.z);
+					D3DXMatrixMultiply(&g_mtxWorldGuide, &g_mtxWorldGuide, &mtxTrans);
 
-				// 頂点フォーマットの設定
-				pDevice->SetFVF(FVF_VERTEX_3D);
+					// ワールドマトリックスの設定
+					pDevice->SetTransform(D3DTS_WORLD, &g_mtxWorldGuide);
 
-				// ガイドの描画
-				pDevice->DrawPrimitive(D3DPT_LINESTRIP, nCnt - nCntB, 1);
+					// 頂点バッファをデバイスのデータストリームに設定
+					pDevice->SetStreamSource(0, g_pVtxBuffGuide, 0, sizeof(VERTEX_3D));
+
+					// 頂点フォーマットの設定
+					pDevice->SetFVF(FVF_VERTEX_3D);
+
+					// ガイドの描画
+					pDevice->DrawPrimitive(D3DPT_LINESTRIP, nCnt - nCntB, 1);
+				}
+				nCnt--;
 			}
-			nCnt--;
-		}
 
+		}
 	}
 }
 

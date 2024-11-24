@@ -17,6 +17,7 @@
 #include "game.h"
 #include "result.h"
 #include "guide.h"
+#include "fade.h"
 
 //グローバル変数宣言
 LPDIRECT3D9 g_pD3D = NULL;						//Direct3Dオブジェクトへのポインタ
@@ -308,7 +309,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
-	
+	InitFade(g_mode);	// フェード
 
 	// モードの設定
 	SetMode(g_mode);
@@ -330,6 +331,7 @@ void Uninit(void)
 	UninitKeyboard();	// キーボードの終了処理
 	UninitMouse();		// マウス
 	UninitJoypad();		// コントローラー
+	UninitFade();		// フェード
 	
 	//Direct3Dデバイスの破棄
 	if (g_pD3DDevice != NULL)
@@ -358,6 +360,7 @@ void Updata(void)
 	UpdataKeyboard();	// キー入力の更新処理
 	UpdateMouse();		// コントローラー
 	UpdataJoypad();		// ジョイパッド
+	UpdateFade();		// フェード
 
 	// 今の状態の更新処理
 	switch (g_mode)
@@ -439,7 +442,8 @@ void Draw(void)
 			DrawResult();
 			break;
 		}
-	
+
+		DrawFade();	// フェード
 
 #ifdef _DEBUG // デバッグビルド時だけ表示
 

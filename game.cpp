@@ -120,7 +120,11 @@ void UpdateGame(void)
 void DrawGame(void)
 {
 	SetCamera();		// カメラ
+
+#ifdef _DEBUG
 	DrawGuide();		// ガイド
+#endif
+
 	DrawShadow();		// 影
 	DrawEffect();		// エフェクト
 	DrawPlayer();		// プレイヤー
