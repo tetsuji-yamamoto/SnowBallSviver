@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "explosion.h"
 #include "effect.h"
+#include "player.h"
 
 // グローバル変数宣言
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffBullet = NULL;	// 頂点バッファへのポインタ
@@ -242,6 +243,7 @@ void DrawBullet(void)
 //*****************************
 void SetBullet(SETBULLET setBlt)
 {
+
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	VERTEX_3D* pVtx = NULL;
@@ -253,10 +255,13 @@ void SetBullet(SETBULLET setBlt)
 	{
 		if (g_aBullet[nCntBl].bUse == false)
 		{
+			//g_camera.posV.x = g_camera.posR.x + sinf(g_camera.rot.x) * sinf(g_camera.rot.y) * g_camera.fDistance;
+			//g_camera.posV.y = g_camera.posR.y + cosf(g_camera.rot.x) * g_camera.fDistance;
+			//g_camera.posV.z = g_camera.posR.z + sinf(g_camera.rot.x) * cosf(g_camera.rot.y) * g_camera.fDistance;
 			g_aBullet[nCntBl].pos = setBlt.pos;
-			g_aBullet[nCntBl].move.x = sinf(setBlt.dir.y) * (float)BULLET_SPEED;
-			g_aBullet[nCntBl].move.y = sinf(setBlt.dir.x) * (float)BULLET_SPEED;
-			g_aBullet[nCntBl].move.z = cosf(setBlt.dir.y) * (float)BULLET_SPEED;
+			g_aBullet[nCntBl].move.x = sinf(setBlt.dir.x) * sinf(setBlt.dir.y) * (float)BULLET_SPEED;
+			g_aBullet[nCntBl].move.y = cosf(setBlt.dir.x) * (float)BULLET_SPEED;
+			g_aBullet[nCntBl].move.z = sinf(setBlt.dir.x) * cosf(setBlt.dir.y) * (float)BULLET_SPEED;
 			g_aBullet[nCntBl].dir = setBlt.dir;
 			g_aBullet[nCntBl].type = setBlt.type;
 			g_aBullet[nCntBl].fLife = setBlt.fLife;
@@ -373,13 +378,19 @@ void GravelBall(int nCntBl)
 		setBlt.pos = g_aBullet[nCntBl].pos;
 		setBlt.size = D3DXVECTOR3(5.0f, 5.0f, 0.0f);
 		setBlt.type = BULLETTYPE_GRAVEL_DIFFUSION;
-		setBlt.fLife = 30.0f;
+		setBlt.fLife = 120.0f;
 
-			setBlt.dir.z = g_aBullet[nCntBl].dir.z;
+		float a = atan2f(g_aBullet[nCntBl].move.x, -g_aBullet[nCntBl].move.y);
+		float e = atan2f(g_aBullet[nCntBl].move.z, -g_aBullet[nCntBl].move.y);
+
+		setBlt.dir.x = atan2f(g_aBullet[nCntBl].move.x,g_aBullet[nCntBl].move.y) + atan2f(g_aBullet[nCntBl].move.z, g_aBullet[nCntBl].move.y);
+		setBlt.dir.y = atan2f(g_aBullet[nCntBl].move.x, g_aBullet[nCntBl].move.z);
+		setBlt.dir.z = g_aBullet[nCntBl].dir.z;
+
 		for (int nCnt = 0; nCnt < 20; nCnt++)
 		{
-			setBlt.dir.x = g_aBullet[nCntBl].dir.x + (float)((rand() % 40 - 20) * 0.01f);
-			setBlt.dir.y = g_aBullet[nCntBl].dir.y + (float)((rand() % 40 - 20) * 0.01f);
+			setBlt.dir.x = setBlt.dir.x + (float)((rand() % 40 - 20) * 0.01f);
+			setBlt.dir.y = setBlt.dir.y + (float)((rand() % 40 - 20) * 0.01f);
 			// 引数にぶち込んでセットする
 			SetBullet(setBlt);
 		}

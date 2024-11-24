@@ -79,6 +79,13 @@ typedef struct
 	float fLot;				//角度
 }VERTEX;
 
+// デバッグ表示管理
+typedef struct
+{
+	int nDebugLine;		// デバッグ表示行
+	int nLineDistance;	// 改行幅
+}DEBUGMANAGER;
+
 //プロトタイプ宣言
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);
@@ -87,7 +94,9 @@ void Updata(void);
 void Draw(void);
 void SetMode(MODE mode);
 MODE GetMode(void);
+
 void DrawFPS(void);
+void DrawGameMode(void);
 void DrawCamera(void);
 void DrawDebPlayer(void);
 void DrawDCamera(void);

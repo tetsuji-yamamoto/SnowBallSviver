@@ -4,8 +4,9 @@
 #include "main.h"
 
 #define MAX_BULLET (256)	// ビルボードの最大数
-#define BULLET_GRAVITY (0.01f)	// 弾の重力
+#define BULLET_GRAVITY (0.2f)	// 弾の重力
 #define BULLET_SPEED (10)	// 弾の速度
+#define BULLET_MAX_DISTANCE (100)	// 弾の最大飛距離
 
 #define FILE_TEX_BULLET_SNOW "date\\texture\\bullet\\SBS_BULLET_SNOW_001.png"
 #define FILE_TEX_BULLET_ICE "date\\texture\\bullet\\SBS_BULLET_ICE_001.png"

@@ -27,7 +27,7 @@ LPD3DXFONT g_pFont = NULL;						//フォントへのポインタ
 int g_nCountFPS = 0;							//fpsカウント用
 bool g_isFullscreen = false;					//ウィンドウを切り替えるためのフラグ
 RECT g_windowRect;								//ウィンドウを切り替えるための変数
-int g_line = 0;
+DEBUGMANAGER g_debMane;							// デバッグ表示管理
 
 //***********************************************
 // デバイスの取得
@@ -309,6 +309,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 		return E_FAIL;
 	}
 
+	g_debMane.nDebugLine = 0;
+	g_debMane.nLineDistance = 15;
+
 	InitFade(g_mode);	// フェード
 
 	// モードの設定
@@ -448,11 +451,12 @@ void Draw(void)
 #ifdef _DEBUG // デバッグビルド時だけ表示
 
 		DrawFPS();			// FPS表示
+		DrawGameMode();		// ゲームモード
 		DrawCamera();		// カメラ
 		DrawDebPlayer();	// pureiya
-		DrawDCamera();		// ライト
+		//DrawDCamera();		// ライト
 
-		g_line = 0;
+		g_debMane.nDebugLine = 0;
 
 #endif
 
@@ -518,14 +522,51 @@ MODE GetMode(void)
 //******************************************
 void DrawFPS(void)
 {
-	RECT rect = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
 	char aStr[256];
-	// 文字に代入
-	wsprintf(&aStr[0], "FPS:%d\n", g_nCountFPS);
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
 
-	g_line += 15;
+	// 文字に代入
+	wsprintf(&aStr[0], "FPS:%0.3d\n", g_nCountFPS);
+
+	RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+	// テキストの描画
+	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+
+	g_debMane.nDebugLine += g_debMane.nLineDistance * 2;
+}
+
+//******************************************
+// ゲームモードのデバッグ表示
+//******************************************
+void DrawGameMode(void)
+{
+	MODE mode = GetMode();
+
+	char aStr[256];
+
+	switch (mode)
+	{
+	case MODE_TITLE:
+		// 文字に代入
+		wsprintf(&aStr[0], "[MODE]<TITLE>");
+		break;
+
+	case MODE_GAME:
+		// 文字に代入
+		wsprintf(&aStr[0], "[MODE]<GAME>");
+		break;
+
+	case MODE_RESULT:
+		// 文字に代入
+		wsprintf(&aStr[0], "[MODE]<RESULT>");
+		break;
+	}
+
+	
+	RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+	// テキストの描画
+	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+
+	g_debMane.nDebugLine += g_debMane.nLineDistance * 2;
 }
 
 //******************************************
@@ -534,18 +575,26 @@ void DrawFPS(void)
 void DrawCamera(void)
 {
 	Camera* pCamera = GetCamera();	// カメラ取得
-
-	char aStr[256];
-
-	RECT rect = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
+	char aStr[7][256];
+	int nCntA = 0;
 
 	// 文字に代入
-	sprintf(&aStr[0], "g_camera.rot.x:%3fy:%3fz:%3f\n", pCamera->rot.x, pCamera->rot.y, pCamera->rot.z);
+	sprintf(&aStr[nCntA][0], "[CAMERA]\n");
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.rot.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->rot.x, pCamera->rot.y, pCamera->rot.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posV.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posV.x, pCamera->posV.y, pCamera->posV.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posR.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posR.x, pCamera->posR.y, pCamera->posR.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posVDest.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posVDest.x, pCamera->posVDest.y, pCamera->posVDest.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posRDest.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posRDest.x, pCamera->posRDest.y, pCamera->posRDest.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.fDistance:%0.3f\n", pCamera->fDistance);
 
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 0, 0, 255));
-
-	g_line += 15;
+	for (int nCntB = 0; nCntB <= nCntA; nCntB++)
+	{
+		RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+		// テキストの描画
+		g_pFont->DrawText(NULL, &aStr[nCntB][0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+		g_debMane.nDebugLine += g_debMane.nLineDistance;
+	}
+	g_debMane.nDebugLine += g_debMane.nLineDistance;
 }
 
 //******************************************
@@ -555,31 +604,24 @@ void DrawDebPlayer(void)
 {
 	PLAYER* pPlayer = GetPlayer();	// プレイヤー取得
 
+	char aStr[5][256];
+	int nCntA = 0;
 
-	RECT rect = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
-	char aStr[256];
 	// 文字に代入
-	sprintf(&aStr[0], "g_player.rot.y:%6f\n", pPlayer->rot.y);
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	sprintf(&aStr[nCntA][0], "[PLAYER]\n");
+	nCntA++; sprintf(&aStr[nCntA][0], "g_player.pos.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_player.rot.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->rot.x, pPlayer->rot.y, pPlayer->rot.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_player.rotDest.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->rotDest.x, pPlayer->rotDest.y, pPlayer->rotDest.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_player.move.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->move.x, pPlayer->move.y, pPlayer->move.z);
 
-	g_line += 15;
-
-	RECT rect2 = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
-	// 文字に代入
-	sprintf(&aStr[0], "g_player.rotDest.y:%6f\n", pPlayer->rotDest.y);
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect2, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
-
-	g_line += 15;
-
-	RECT rect3 = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
-	// 文字に代入
-	sprintf(&aStr[0], "g_player.move:x%6f:y%6f;z%6f\n", pPlayer->move.x, pPlayer->move.y, pPlayer->move.z);
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect3, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
-
-	g_line += 15;
+	for (int nCnt = 0; nCnt <= nCntA; nCnt++)
+	{
+		RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+		// テキストの描画
+		g_pFont->DrawText(NULL, &aStr[nCnt][0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+		g_debMane.nDebugLine += g_debMane.nLineDistance;
+	}
+	g_debMane.nDebugLine += g_debMane.nLineDistance;
 }
 
 //******************************************
@@ -587,16 +629,21 @@ void DrawDebPlayer(void)
 //******************************************
 void DrawDCamera(void)
 {
-	D3DLIGHT9* pLight = GetLight();	// ライト取得
+	//D3DLIGHT9* pLight = GetLight();	// ライト取得
 
+	//char aStr[5][256];
+	//int nCntA = 0;
 
-	RECT rect = { 0,g_line,SCREEN_WIDTH,SCREEN_HEIGHT };
-	char aStr[256];
-	// 文字に代入
-	sprintf(&aStr[0], "g_light.Direction.x:%3fy:%3fz:%3f\n", pLight->Direction.x, pLight->Direction.y, pLight->Direction.z);
-	// テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 255, 255, 255));
+	//// 文字に代入
+	//sprintf(&aStr[nCntA][0], "[LIGHT]\n");
+	//nCntA++; sprintf(&aStr[nCntA][0], "g_player.pos.x:%0.3fy:%0.3fz:%0.3f\n", pLight->pos.x, pPlayer->pos.y, pPlayer->pos.z);
 
-	g_line += 15;
-
+	//for (int nCnt = 0; nCnt < nCntA; nCnt++)
+	//{
+	//	RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+	//	// テキストの描画
+	//	g_pFont->DrawText(NULL, &aStr[nCnt][0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+	//	g_debMane.nDebugLine += g_debMane.nLineDistance;
+	//}
+	//g_debMane.nDebugLine += g_debMane.nLineDistance;
 }

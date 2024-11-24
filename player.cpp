@@ -209,10 +209,18 @@ void UpdatePlayer(void)
 
 		// 情報代入
 		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
-		setBlt.dir = g_player.rotDest;
 		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 		setBlt.type = BULLETTYPE_SNOW;
 		setBlt.fLife = 120.0f;
+
+		//float fX = (float)BULLET_MAX_DISTANCE / 2.0f;
+		//float fY = (float)BULLET_MAX_DISTANCE / (float)BULLET_SPEED;	// 放物線のてっぺん
+		//float fAngle = atan2f(fX, fY);
+
+		setBlt.dir.x = pCamera->rot.x + D3DX_PI;
+		setBlt.dir.y = g_player.rotDest.y;
+		setBlt.dir.z = g_player.rotDest.z;
+		//setBlt.dir.x = D3DX_PI*0.5f;
 
 		// 引数にぶち込んでセットする
 		SetBullet(setBlt);
@@ -238,7 +246,9 @@ void UpdatePlayer(void)
 
 		// 情報代入
 		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
-		setBlt.dir = g_player.rotDest;
+		setBlt.dir.x = pCamera->rot.x + D3DX_PI;
+		setBlt.dir.y = g_player.rotDest.y;
+		setBlt.dir.z = g_player.rotDest.z;
 		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 		setBlt.type = BULLETTYPE_ICE;
 		setBlt.fLife = 60.0f;
@@ -254,10 +264,12 @@ void UpdatePlayer(void)
 
 		// 情報代入
 		setBlt.pos = D3DXVECTOR3(g_player.pos.x, g_player.pos.y + 10.0f, g_player.pos.z);
-		setBlt.dir = g_player.rotDest;
+		setBlt.dir.x = pCamera->rot.x + D3DX_PI;
+		setBlt.dir.y = g_player.rotDest.y;
+		setBlt.dir.z = g_player.rotDest.z;
 		setBlt.size = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 		setBlt.type = BULLETTYPE_GRAVEL;
-		setBlt.fLife = 30.0f;
+		setBlt.fLife = 90.0f;
 
 		// 引数にぶち込んでセットする
 		SetBullet(setBlt);

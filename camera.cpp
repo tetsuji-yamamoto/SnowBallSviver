@@ -58,6 +58,16 @@ void UpdateCamera(void)
 		{
 			g_camera.nType = 0;
 		}
+
+		switch (g_camera.nType)
+		{
+
+		case CAMERATYPE_PLAYER:
+			g_camera.fDistance = 160.0f;
+			break;
+
+		}
+
 	}
 
 	switch (g_camera.nType)
@@ -75,11 +85,11 @@ void UpdateCamera(void)
 		g_camera.posVDest.z = pPlayer->pos.z - cosf(g_camera.rot.y) * g_camera.fDistance;
 
 		g_camera.posR.x += (g_camera.posRDest.x - g_camera.posR.x) * 0.1f;
-		g_camera.posR.y;
+		g_camera.posR.y = pPlayer->pos.y + 50;
 		g_camera.posR.z += (g_camera.posRDest.z - g_camera.posR.z) * 0.1f;
 
 		g_camera.posV.x += (g_camera.posVDest.x - g_camera.posV.x) * 0.1f;
-		g_camera.posV.y;
+		g_camera.posV.y = pPlayer->pos.y + 50;
 		g_camera.posV.z += (g_camera.posVDest.z - g_camera.posV.z) * 0.1f;
 		break;
 
