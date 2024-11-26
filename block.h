@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define MAX_BLOCK (4)		// 最大ブロック数
+#define MAX_BLOCK (9)		// 最大ブロック数
 #define FILE_XFILE_BLOCK_SNOW "date\\xfile\\block\\Block_Snow_001.x"
 
 // ブロックタイプ列挙型
@@ -25,6 +25,7 @@ typedef struct
 	D3DXMATRIX mtxWorld;	// ワールドマトリックス
 	D3DXVECTOR3 pos;		// 位置
 	D3DXVECTOR3 rot;		// 向き
+	D3DXVECTOR3 vtxMinBlock, vtxMaxBlock;	// モデルの最小値最大値
 	const char* pFilename;	// ファイル名
 	char astr[256];			// 文字格納
 	int nType;				// タイプ
@@ -41,6 +42,12 @@ typedef struct
 	int nType;				// タイプ
 }SETBLOCK;
 
+// ブロックコントローラー
+typedef struct
+{
+	int nCntNowBlock;	// 今選んでいるブロック
+}BLOCKCONTROLLER;
+
 // ブロックの管理
 typedef struct
 {
@@ -55,4 +62,7 @@ void DrawBlock(void);
 void SetBlock(SETBLOCK setBlock);
 BLOCK* GetBlock(void);
 BLOCKMANAGER* GetBlockManager(void);
+void BlockOllDeliete(void);
+bool CollisionBlock(void);
+void BlockControllre(void);
 #endif // !_MODEL_H_

@@ -100,4 +100,5 @@ void DrawGameMode(void);
 void DrawCamera(void);
 void DrawDebPlayer(void);
 void DrawDCamera(void);
+void DrawEdit(void);
 #endif

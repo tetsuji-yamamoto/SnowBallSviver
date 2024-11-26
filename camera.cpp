@@ -96,89 +96,89 @@ void UpdateCamera(void)
 	}
 	// キーボード操作
 	
-	if (KeyboardRepeat(DIK_RSHIFT))
-	{
-		if (KeyboardRepeat(DIK_RIGHT))
-		{//右上に移動
-			g_camera.rot.y -= 0.01f;	// 回転量
-		}
-		else if (KeyboardRepeat(DIK_LEFT))
-		{//左上に移動
-			g_camera.rot.y += 0.01f;	// 回転量
-		}
-		else if (KeyboardRepeat(DIK_UP))
-		{
-			bVR = false;
-			g_camera.rot.y -= 0.01f;	// 回転量
-		}
-		else if (KeyboardRepeat(DIK_DOWN))
-		{
-			bVR = false;
-			g_camera.rot.y += 0.01f;	// 回転量
-		}
-	}
-	else if (KeyboardRepeat(DIK_UP))
-	{//まっすぐ移動
-		if (KeyboardRepeat(DIK_RIGHT))
-		{//右上に移動
-			g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-		}
-		else if (KeyboardRepeat(DIK_LEFT))
-		{//左上に移動
-			g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-		}
-		else
-		{
-			g_camera.posV.x += sinf(g_camera.rot.y) * 1.0f;
-			g_camera.posV.z += cosf(g_camera.rot.y) * 1.0f;
-			g_camera.posR.x += sinf(g_camera.rot.y) * 1.0f;
-			g_camera.posR.z += cosf(g_camera.rot.y) * 1.0f;
-		}
-	}
-	else if (KeyboardRepeat(DIK_DOWN))
-	{//下に移動
-		if (KeyboardRepeat(DIK_RIGHT))
-		{//右に移動
-			g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-			g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
-		}
-		else if (KeyboardRepeat(DIK_LEFT))
-		{//左に移動
-			g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-			g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
-		}
-		else
-		{
-			g_camera.posV.x -= sinf(g_camera.rot.y) * 1.0f;
-			g_camera.posV.z -= cosf(g_camera.rot.y) * 1.0f;
-			g_camera.posR.x -= sinf(g_camera.rot.y) * 1.0f;
-			g_camera.posR.z -= cosf(g_camera.rot.y) * 1.0f;
-		}
-	}
-	else if (KeyboardRepeat(DIK_RIGHT))
-	{//右に移動
-		g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-	}
-	else if (KeyboardRepeat(DIK_LEFT))
-	{//左に移動
-		g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-		g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
-	}
+	//if (KeyboardRepeat(DIK_RSHIFT))
+	//{
+	//	if (KeyboardRepeat(DIK_RIGHT))
+	//	{//右上に移動
+	//		g_camera.rot.y -= 0.01f;	// 回転量
+	//	}
+	//	else if (KeyboardRepeat(DIK_LEFT))
+	//	{//左上に移動
+	//		g_camera.rot.y += 0.01f;	// 回転量
+	//	}
+	//	else if (KeyboardRepeat(DIK_UP))
+	//	{
+	//		bVR = false;
+	//		g_camera.rot.y -= 0.01f;	// 回転量
+	//	}
+	//	else if (KeyboardRepeat(DIK_DOWN))
+	//	{
+	//		bVR = false;
+	//		g_camera.rot.y += 0.01f;	// 回転量
+	//	}
+	//}
+	//else if (KeyboardRepeat(DIK_UP))
+	//{//まっすぐ移動
+	//	if (KeyboardRepeat(DIK_RIGHT))
+	//	{//右上に移動
+	//		g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//	}
+	//	else if (KeyboardRepeat(DIK_LEFT))
+	//	{//左上に移動
+	//		g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//	}
+	//	else
+	//	{
+	//		g_camera.posV.x += sinf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posV.z += cosf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posR.x += sinf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posR.z += cosf(g_camera.rot.y) * 1.0f;
+	//	}
+	//}
+	//else if (KeyboardRepeat(DIK_DOWN))
+	//{//下に移動
+	//	if (KeyboardRepeat(DIK_RIGHT))
+	//	{//右に移動
+	//		g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//		g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.75f)) * 0.5f;
+	//	}
+	//	else if (KeyboardRepeat(DIK_LEFT))
+	//	{//左に移動
+	//		g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//		g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.25f)) * 0.5f;
+	//	}
+	//	else
+	//	{
+	//		g_camera.posV.x -= sinf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posV.z -= cosf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posR.x -= sinf(g_camera.rot.y) * 1.0f;
+	//		g_camera.posR.z -= cosf(g_camera.rot.y) * 1.0f;
+	//	}
+	//}
+	//else if (KeyboardRepeat(DIK_RIGHT))
+	//{//右に移動
+	//	g_camera.posV.x += sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posV.z += cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posR.x += sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posR.z += cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//}
+	//else if (KeyboardRepeat(DIK_LEFT))
+	//{//左に移動
+	//	g_camera.posV.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posV.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posR.x -= sinf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//	g_camera.posR.z -= cosf(g_camera.rot.y + (D3DX_PI * 0.5f)) * 1.0f;
+	//}
 
 	// マウス操作
 	if (MouseButtonRepeat(MOUSEBUTTON_LEFT) == true)

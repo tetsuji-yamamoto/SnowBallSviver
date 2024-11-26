@@ -18,6 +18,7 @@
 #include "result.h"
 #include "guide.h"
 #include "fade.h"
+#include "edit.h"
 
 //グローバル変数宣言
 LPDIRECT3D9 g_pD3D = NULL;						//Direct3Dオブジェクトへのポインタ
@@ -313,9 +314,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	g_debMane.nLineDistance = 15;
 
 	InitFade(g_mode);	// フェード
-
 	// モードの設定
 	SetMode(g_mode);
+
+#ifdef _DEBUG	// デバッグモード時だけ
+	InitEdit();			// エディター
+#endif
 
 	// デバッグ用表示フォントの生成
 	D3DXCreateFont(g_pD3DDevice, 18, 0, 0, 0,
@@ -391,10 +395,30 @@ void Updata(void)
 	{// オブジェクトのテキストへの書き込み
 		WriteText();
 	}
+	else if (KeyboardTrigger(DIK_F4))
+	{// エディットモード切替
+		if (GetEditMode() == EDITMODE_MAX)
+		{// エディターモード解除状態なら
+			switch (GetMode())
+			{
+			case MODE_GAME:// エディターゲームモード
+				SetEditMode(EDITMODE_GAME);
+				break;
+			}
+		}
+		else
+		{
+			// エディターモード解除
+			SetEditMode(EDITMODE_MAX);
+		}
+	}
 
 	// モード切替
 	if (KeyboardTrigger(DIK_F10))
 	{
+		// エディターモード解除
+		SetEditMode(EDITMODE_MAX);
+
 		// 次のモードに切り替える
 		switch (g_mode)
 		{
@@ -452,9 +476,10 @@ void Draw(void)
 
 		DrawFPS();			// FPS表示
 		DrawGameMode();		// ゲームモード
+		DrawEdit();			// エディター
 		DrawCamera();		// カメラ
 		DrawDebPlayer();	// pureiya
-		//DrawDCamera();		// ライト
+		//DrawDCamera();	// ライト
 
 		g_debMane.nDebugLine = 0;
 
@@ -535,6 +560,34 @@ void DrawFPS(void)
 }
 
 //******************************************
+// エディターのデバッグ表示
+//******************************************
+void DrawEdit(void)
+{
+	char aStr[256];
+
+	switch (GetEditMode())
+	{
+	case EDITMODE_GAME:	// エディターゲームモード
+		// 文字に代入
+		wsprintf(&aStr[0], "[EDIT_MODE]<GAME>");
+		break;
+
+	case EDITMODE_MAX:	// エディット解除
+		// 文字に代入
+		wsprintf(&aStr[0], "[EDIT_MODE]<NONE>");
+		break;
+
+	}
+
+	RECT rect = { 0,g_debMane.nDebugLine,SCREEN_WIDTH,SCREEN_HEIGHT };
+	// テキストの描画
+	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(200, 255, 0, 255));
+
+	g_debMane.nDebugLine += g_debMane.nLineDistance * 2;
+}
+
+//******************************************
 // ゲームモードのデバッグ表示
 //******************************************
 void DrawGameMode(void)
@@ -575,12 +628,13 @@ void DrawGameMode(void)
 void DrawCamera(void)
 {
 	Camera* pCamera = GetCamera();	// カメラ取得
-	char aStr[7][256];
+	char aStr[8][256];
 	int nCntA = 0;
 
 	// 文字に代入
 	sprintf(&aStr[nCntA][0], "[CAMERA]\n");
 	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.rot.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->rot.x, pCamera->rot.y, pCamera->rot.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posV.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posV.x, pCamera->posV.y, pCamera->posV.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posV.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posV.x, pCamera->posV.y, pCamera->posV.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posR.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posR.x, pCamera->posR.y, pCamera->posR.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_camera.posVDest.x:%0.3fy:%0.3fz:%0.3f\n", pCamera->posVDest.x, pCamera->posVDest.y, pCamera->posVDest.z);
@@ -604,12 +658,13 @@ void DrawDebPlayer(void)
 {
 	PLAYER* pPlayer = GetPlayer();	// プレイヤー取得
 
-	char aStr[5][256];
+	char aStr[6][256];
 	int nCntA = 0;
 
 	// 文字に代入
 	sprintf(&aStr[nCntA][0], "[PLAYER]\n");
 	nCntA++; sprintf(&aStr[nCntA][0], "g_player.pos.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->pos.x, pPlayer->pos.y, pPlayer->pos.z);
+	nCntA++; sprintf(&aStr[nCntA][0], "g_player.posOld.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->posOld.x, pPlayer->posOld.y, pPlayer->posOld.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_player.rot.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->rot.x, pPlayer->rot.y, pPlayer->rot.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_player.rotDest.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->rotDest.x, pPlayer->rotDest.y, pPlayer->rotDest.z);
 	nCntA++; sprintf(&aStr[nCntA][0], "g_player.move.x:%0.3fy:%0.3fz:%0.3f\n", pPlayer->move.x, pPlayer->move.y, pPlayer->move.z);

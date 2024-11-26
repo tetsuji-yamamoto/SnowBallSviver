@@ -5,6 +5,8 @@
 #include "bullet.h"
 #include "particle.h"
 #include "joypad.h"
+#include "block.h"
+#include "wall.h"
 
 // グローバル変数宣言
 LPDIRECT3DTEXTURE9 g_apTexturePlayer[6] = {};		// テクスチャへのポンタ
@@ -136,7 +138,6 @@ void UpdatePlayer(void)
 		g_player.bMove = true;	// 動くよ
 
 		g_player.rotDest.y = pCamera->rot.y - D3DX_PI * 0.5f;	// 目的の角度を設定
-
 	}
 	else if (KeyboardRepeat(DIK_D))
 	{// 右移動		
@@ -151,6 +152,15 @@ void UpdatePlayer(void)
 		g_player.bMove = true;	// 動くよ
 		// 目的の角度を算出
 		g_player.rotDest.y = pCamera->rot.y + atan2f(pJoypad->Gamepad.sThumbLX, pJoypad->Gamepad.sThumbLY);
+	}
+
+	if (KeyboardTrigger(DIK_SPACE) || GetJoypadTrigger(JOYKEY_A))
+	{// Aジャンプ
+		if (g_player.bJanp == false)
+		{// ジャンプしてなかったら
+			g_player.move.y = 8.0f;
+			g_player.bJanp = true;	// ジャンプ状態
+		}
 	}
 
 	if (g_player.rotDest.y > D3DX_PI)
@@ -191,15 +201,38 @@ void UpdatePlayer(void)
 	}
 	g_player.rot.y += (fDiff) * 0.1f;
 
+	// 古い位置を更新
+	g_player.posOld.x = g_player.pos.x;
+	g_player.posOld.y = g_player.pos.y;
+	g_player.posOld.z = g_player.pos.z;
+
+	if (g_player.bJanp == true)
+	{
+		g_player.move.y -= PLAYER_GRAVITY;
+	}
+
 	// 慣性
 	g_player.move.x += (0 - g_player.move.x) * 0.3f;
-	g_player.move.y += (0 - g_player.move.y) * 0.3f;
 	g_player.move.z += (0 - g_player.move.z) * 0.3f;
-	
+
+
 	// 移動量追加
 	g_player.pos.x += g_player.move.x;
+	CollisionBlock();	// 当たり判定
+
 	g_player.pos.y += g_player.move.y;
+	g_player.bJanp = !CollisionBlock();	// 当たり判定
+
 	g_player.pos.z += g_player.move.z;
+	CollisionBlock();	// 当たり判定
+
+	CollisionWall();	// 壁の当たり判定
+
+	if (g_player.pos.y <= 0.0f)
+	{// 地面突いたら
+		g_player.pos.y = 0.0f;
+		g_player.bJanp = false;	// ジャンプしてないよ
+	}
 
 	if (KeyboardTrigger(DIK_V) || GetJoypadTrigger(JOYKEY_X))
 	{// 弾発射
